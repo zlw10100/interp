@@ -16,3 +16,8 @@
 (provide builtin)
 (provide builtin?)
 (provide builtin-procedure)
+
+(struct continuation (procedure))
+(provide continuation)
+(provide continuation?)
+(provide continuation-procedure)

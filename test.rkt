@@ -236,7 +236,7 @@
    "begin2"
    (interp '(begin
               (define x 23)
-              (set! x 25)
+              (set! x 25);
               x))
    25)
 
@@ -265,6 +265,48 @@
    10)
   )
 (add-test-cases! test-interp-begin)
+
+; call/cc
+
+(define (test-interp-callcc)
+  (test
+   "call/cc1"
+   (interp '(+ 1
+               (call/cc
+                (lambda (k)
+                  100))))
+   101)
+
+  (test
+   "call/cc2"
+   (interp '(+ 1
+               (call/cc
+                (lambda (k)
+                  (+ 2 (k 10))))))
+   11)
+
+  (test
+   "call/cc3"
+   (interp '(+ 1
+               (call/cc
+                (lambda (k1)
+                  (+ 2 (call/cc
+                        (lambda (k2)
+                          (+ 3 (k1 10)))))))))
+   11)
+
+  (test
+   "call/cc4"
+   (interp '(+ 1
+               (call/cc
+                (lambda (k1)
+                  (+ 2 (call/cc
+                        (lambda (k2)
+                          (+ 3 (k2 10)))))))))
+   13)
+
+  )
+(add-test-cases! test-interp-callcc)
 
 ;; api
 

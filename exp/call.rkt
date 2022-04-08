@@ -38,6 +38,9 @@
               (closure-body op-value)
               (lambda (body-values)
                 (k (last body-values)))))]
+          [(continuation? op-value)
+           (apply (continuation-procedure op-value)
+            arg-values)]
           [(builtin? op-value)
            (printf "builtin: ~a~n" (builtin-procedure op-value))
            (k (apply
