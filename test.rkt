@@ -158,9 +158,53 @@
                (lambda ()
                  (define x 66))
                x)))
-   100)
+   100) 
   )
 (add-test-cases! test-interp-define)
+
+
+; test recursion define function
+
+(define (test-interp-recursion-function)
+  (test
+   "recursion function1"
+   (interp '(begin
+              (define sum
+                (lambda (n)
+                  (if (= n 0)
+                      0
+                      (+ n (sum (- n 1))))))
+              (sum 100)))
+   5050)
+
+  (test
+   "recursion function2"
+   (interp '(begin
+              (define fact
+                (lambda (n)
+                  (if (= n 0)
+                      1
+                      (* n (fact (- n 1))))))
+              (fact 10)))
+   3628800)
+
+  (test
+   "recursion function3"
+   (interp '(begin
+              (define fib
+                (lambda (n)
+                  (if (= n 0)
+                      0
+                      (if (= n 1)
+                          1
+                          (+
+                           (fib (- n 1))
+                           (fib (- n 2)))))))
+              (fib 10)))
+   55)
+  )
+
+(add-test-cases! test-interp-recursion-function)
 
 ; set!
 
