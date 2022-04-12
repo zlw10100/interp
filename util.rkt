@@ -27,8 +27,20 @@
    `(let ,pairs)
    body))
 
+(define (make-if-exp pred-exp true-branch-exp false-branch-exp)
+  `(if ,pred-exp ,true-branch-exp ,false-branch-exp))
+
+(define (make-cond-exp/items items)
+  (append `(cond) items))
+
+(define (make-begin-exp sequence)
+  (append `(begin) sequence))
+
 (provide exp-tag)
 (provide map-cps)
 (provide make-lambda-exp)
 (provide make-call-exp)
 (provide make-let-exp)
+(provide make-if-exp)
+(provide make-cond-exp/items)
+(provide make-begin-exp)

@@ -10,6 +10,7 @@
 (require "exp/set.rkt")
 (require "exp/begin.rkt")
 (require "exp/callcc.rkt")
+(require "exp/cond.rkt")
 
 (define (special-form? exp)
   (assq/key-in
@@ -36,6 +37,7 @@
     (set! . ,interp-cps/set!)
     (begin . ,interp-cps/begin)
     (call/cc . ,interp-cps/callcc)
+    (cond . ,interp-cps/cond)
     ))
 
 (provide special-form?)

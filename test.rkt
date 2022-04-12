@@ -352,6 +352,57 @@
   )
 (add-test-cases! test-interp-callcc)
 
+; cond
+
+(define (test-interp-cond)
+  (test
+   "cond1"
+   (interp '(let ([x 2])
+              (cond
+                [(= x 3) 3]
+                [(= x 1) 1]
+                [(= x 0) 0]
+                [(= x 2) "yes"]
+                [else "else branch"])))
+   "yes")
+
+  (test
+   "cond2"
+   (interp '(let ([x 2])
+              (cond
+                [(= x 3) 3]
+                [else "else branch"]
+                [(= x 1) 1]
+                [(= x 0) 0]
+                [(= x 2) "yes"]
+                [else "else branch1"]
+                )))
+   "else branch")
+
+  (test
+   "cond3"
+   (interp '(let ([x 2])
+              (cond
+                [(= x 3) 3 4 5]
+                [(= x 2) 4 5 6]
+                [else "else branch"])))
+                
+   6)
+
+  (test
+   "cond4"
+   (interp '(let ([x 2])
+              (cond
+                [(= x 3) 3 4 5]
+                [(= x 2) (cond
+                           [(= 1 2) "incorrect"]
+                           [else "yes"])]
+                [else "else branch"])))
+                
+   "yes")
+  )
+(add-test-cases! test-interp-cond)
+
 ;; api
 
 (test-all)
