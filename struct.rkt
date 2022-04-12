@@ -21,3 +21,9 @@
 (provide continuation)
 (provide continuation?)
 (provide continuation-procedure)
+
+; parial continuation
+(struct pcontinuation (procedure))
+(provide pcontinuation)
+(provide pcontinuation?)
+(provide pcontinuation-procedure)

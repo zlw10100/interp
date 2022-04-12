@@ -403,6 +403,82 @@
   )
 (add-test-cases! test-interp-cond)
 
+
+; reset/shift
+
+(define (test-interp-reset-shift)
+  (test
+   "reset-shift-1"
+   (interp '(reset 2 3 4 5))
+   5)
+
+  (test
+   "reset-shift-2"
+   (interp '(+ 1
+               (reset
+                (+ 10
+                   (shift k
+                          (+ 100 200)
+                          (k (k 5))
+                          300)))))
+   301)
+
+  (test
+   "reset-shift-3"
+   (interp '(+ 1
+               (reset
+                (+ 10
+                   (shift k
+                          (+ 100 200)
+                          (k (k 5))
+                          )))))
+   26)
+
+  (test
+   "reset-shift-4"
+   (interp '(+ 1
+               (reset
+                (+ 10
+                   (reset 
+                    (* 2
+                       (shift k
+                              (+ 100 200)
+                              (k (k 5))
+                              300)))))))
+   311)
+
+  (test
+   "reset-shift-5"
+   (interp '(+ 1
+               (reset
+                (+ 10
+                   (reset 
+                    (* 2
+                       (shift k
+                              (+ 100 200)
+                              (k (k 5))
+                              )))))))
+   31)
+
+  (test
+   "reset-shift-6"
+   (interp '(begin
+              (define c #f)
+              (+ 1
+                 (reset
+                  (+ 2
+                     (call/cc
+                      (lambda (k)
+                        (begin
+                          (set! c k)
+                          (* 50 (k 100)))))
+                     (shift k (k 300)))))))
+   403)
+  
+  )
+(add-test-cases! test-interp-reset-shift)
+
+
 ;; api
 
 (test-all)

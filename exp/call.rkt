@@ -7,6 +7,7 @@
 (require "../util.rkt")
 (require "../struct.rkt")
 (require "../env.rkt")
+(require "../global.rkt")
 
 (define (call? exp)
   (list? exp))
@@ -41,6 +42,14 @@
           [(continuation? op-value)
            (apply (continuation-procedure op-value)
             arg-values)]
+
+          ;; 设置一个全局变量和reset做交互
+          [(pcontinuation? op-value)
+           (k (begin
+             (set-shift-call!)
+             (apply (pcontinuation-procedure op-value)
+                    arg-values)))]
+          
           [(builtin? op-value)
            (printf "builtin: ~a~n" (builtin-procedure op-value))
            (k (apply

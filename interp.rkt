@@ -5,6 +5,7 @@
 (require "builtin.rkt")
 (require "env.rkt")
 (require "y-combinator.rkt")
+(require "global.rkt")
 
 (require "exp/variable.rkt")
 (require "exp/call.rkt")
@@ -35,12 +36,14 @@
                    (make-builtin-env)
                    (make-native-env))]
         [final-exp  
-         `(begin
+         `(reset  ;; 这里帮用户做了初始reset的客户代码
+           (begin
              (define Y ,Y-exp)  ;; 这里帮用户做了Y combinator的客户代码
              ,exp
-             )]
+             ))]
         )
     ;(printf "final-exp: ~a~n" final-exp)
+    (clear-reset-ks!)
     (interp-cps final-exp init-env (lambda (x) x))))
 
 (provide interp-cps)
