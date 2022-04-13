@@ -9,30 +9,19 @@
 (require "../util.rkt")
 (require "../global.rkt")
 
-
 ;; reset
 
 (define (reset-body exp)
   (cdr exp))
 
 (define (interp-cps/reset exp env k)
-  (begin
-    (enqueue-reset-ks! k)
-   ; (printf "reset k: ~a ~a~n" k (k 10))
-    (map-cps
-     (lambda (e k)
-       (interp-cps e env (lambda (result)
-                      ;     (printf "result: ~a ready to call reset k, shift-call: ~a~n"
-                       ;            result
-                        ;           shift-call)
-                          ; (printf "(k result) is: ~a~n" (k result))
-                           (if (check-shift-call!)
-                               ;; shift里面对k的调用，执行到这里不再调用后续k，模拟reset和shift之间的continuation
-                               result  
-                               (k result)))))
-     (reset-body exp)
-     (lambda (body-values)
-       (k (last body-values))))))
+  (map-cps
+   (lambda (e k)
+     (k (interp-cps e env ID)))  ;; 用ID做continuation界定符
+   (reset-body exp)
+   (lambda (body-values)
+     (k (last body-values)))))
+
 
 ;; shift
 
@@ -47,11 +36,11 @@
                   (make-env/items `((,(shift-name exp) . ,(pcontinuation k))))
                   env)])
     (map-cps
-     (lambda (e k) (interp-cps e new-env k))
+     (lambda (e k)
+       (interp-cps e new-env k))
      (shift-body exp)
      (lambda (body-values)
-       (let ([reset-k (dequeue-reset-ks!)])
-         (reset-k (last body-values)))))))
+       (last body-values)))))  ;; 不调用k可以跳过reset...shift之间的continuation
 
 (provide interp-cps/reset)
 (provide interp-cps/shift)

@@ -5,7 +5,6 @@
 (require "builtin.rkt")
 (require "env.rkt")
 (require "y-combinator.rkt")
-(require "global.rkt")
 
 (require "exp/variable.rkt")
 (require "exp/call.rkt")
@@ -43,7 +42,6 @@
              ))]
         )
     ;(printf "final-exp: ~a~n" final-exp)
-    (clear-reset-ks!)
     (interp-cps final-exp init-env (lambda (x) x))))
 
 (provide interp-cps)

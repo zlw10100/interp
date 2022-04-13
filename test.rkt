@@ -474,6 +474,33 @@
                           (* 50 (k 100)))))
                      (shift k (k 300)))))))
    403)
+
+  (test
+   "reset-shift-7"
+   (interp '(+ 1
+               (reset
+                (+ 10
+                   (shift k
+                          (+ (k (k 300))
+                             (k 300)))))))
+   631)
+
+  (test
+   "reset-shift-8"
+   (interp '(+ 1
+               (reset
+                (+ 1 (+ 1
+                        (shift k
+                               (+ (k 0)
+                                  (k 0))))))))
+   5)
+
+  (test
+   "reset-shift-9"
+   (interp '(+ 1
+               (reset (+ 1 (+ 1
+                              (shift k (k 10)))))))
+   13)
   
   )
 (add-test-cases! test-interp-reset-shift)
