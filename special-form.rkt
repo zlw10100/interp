@@ -12,6 +12,7 @@
 (require "exp/callcc.rkt")
 (require "exp/cond.rkt")
 (require "exp/reset-shift.rkt")
+(require "exp/quote.rkt")
 
 (define (special-form? exp)
   (assq/key-in
@@ -41,6 +42,7 @@
     (cond . ,interp-cps/cond)
     (reset . ,interp-cps/reset)
     (shift . ,interp-cps/shift)
+    (quote . ,interp-cps/quote)
     ))
 
 (provide special-form?)

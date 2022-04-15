@@ -506,6 +506,31 @@
 (add-test-cases! test-interp-reset-shift)
 
 
+; quote
+
+(define (test-interp-quote)
+  (test
+   "quote1"
+   (interp ''c)
+   'c)
+
+  (test
+   "quote2"
+   (interp '(if (= 1 1)
+                'hello
+                'world))
+   'hello)
+
+  (test
+   "quote3"
+   (interp '((lambda (x)
+               '(1 2 3 4))
+             100))
+   '(1 2 3 4))
+
+  )
+(add-test-cases! test-interp-quote)
+
 ;; api
 
 (test-all)

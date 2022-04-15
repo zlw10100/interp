@@ -36,7 +36,7 @@
                    (make-native-env))]
         [final-exp  
          `(begin
-            (define Y ,Y-exp)  ;; 这里帮用户做了Y combinator的客户代码
+            (define Y ,Y-exp)  ;; 这里做了Y combinator的客户代码
             ,exp
             )]
         )
