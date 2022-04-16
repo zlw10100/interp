@@ -1,6 +1,6 @@
 #lang racket
 
-(struct lookup-not-found ())
+(require "struct.rkt")
 
 ;; hash table
 

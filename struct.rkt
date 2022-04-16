@@ -1,5 +1,9 @@
 #lang racket
 
+(struct lookup-not-found ())
+(provide lookup-not-found)
+(provide lookup-not-found?)
+
 (struct closure (params body env))
 (provide closure)
 (provide closure?)
@@ -27,3 +31,7 @@
 (provide pcontinuation)
 (provide pcontinuation?)
 (provide pcontinuation-procedure)
+
+(struct not-matched ())
+(provide not-matched)
+(provide not-matched?)
