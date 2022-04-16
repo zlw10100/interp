@@ -656,6 +656,153 @@
 (add-test-cases! test-interp-quasiquote)
 
 
+; match
+
+(define (test-interp-match)
+  (test
+   "match1"
+   (interp '(match 1
+              [1 'yes]
+              [_ 'no]))
+   'yes)
+
+  (test
+   "match2"
+   (interp '(match #t
+              [#f 'yes]
+              [_ 'no]))
+   'no)
+
+  (test
+   "match3"
+   (interp '(match #t
+              [_ 'first]
+              [#f 'yes]
+              [_ 'no]))
+   'first)
+  
+  (test
+   "match4"
+   (interp '(match "hello"
+              ["world" 'incorrect]
+              [#f 'incorrect1]
+              ['hello 'incorrect-symbol]
+              ["hello" 'correct]
+              [_ 'incorrect-else]))
+   'correct)
+
+  (test
+   "match5"
+   (interp '(match 'hello
+              ["world" 'incorrect]
+              [#f 'incorrect1]
+              ['hello 'correct]
+              ["hello" 'incorrect-string]
+              [_ 'incorrect-else]))
+   'correct)
+
+  (test
+   "match6"
+   (interp '(match '(1 2 3)
+              [a a]
+              [_ 'incorrect-else]))
+   '(1 2 3))
+
+  (test
+   "match7"
+   (interp '(match '(1 2 3)
+              [(list 1 2 3) 'yes]
+              [_ 'incorrect-else]))
+   'yes)
+
+  (test
+   "match8"
+   (interp '(match '(1 2 3)
+              [(list 1 2 10) 'list]
+              [`(1 2 3) 'yes]
+              [_ 'incorrect-else]))
+   'yes)
+
+  (test
+   "match9"
+   (interp '(match '(1 2 (3 4) 5)
+              [(list 1 2 `(3 4) 5) 'yes]
+              [_ 'incorrect-else]))
+   'yes)
+
+  (test
+   "match10"
+   (interp '(match '(1 2 (3 4) 5)
+              [(list 1 b `(3 4) c) (+ b c)]
+              [_ 'incorrect-else]))
+   7)
+
+  (test
+   "match11"
+   (interp '(match '(1 2 (3 4) 5)
+              [(list 1 2 c d) `(,d ,@c)]
+              [_ 'incorrect-else]))
+   '(5 3 4))
+
+  (test
+   "match12"
+   (interp '(match '(1 2 (3 4) 5)
+              [`(1 2 ,c ,d) `(,d ,@c)]
+              [_ 'incorrect-else]))
+   '(5 3 4))
+
+  (test
+   "match13"
+   (interp '(match '(1 2 (3 4) 5)
+              [`(1 2 ,@a ,d) `(,d ,a)]
+              [_ 'incorrect-else]))
+   '(5 ((3 4))))
+
+  
+  (test
+   "match14"
+   (interp '(match '(1 2 (3 4) 5)
+              [`(1 2 (,x ,y) ,z)
+               (begin
+                 (let ([a 100])
+                   (+ a x y z)))]
+              [_ 'incorrect-else]))
+   112)
+
+  (test
+   "match15"
+   (interp '(begin
+              (define a 100)
+              (match '(1 2 (3 4) 5)
+                [`(1 2 (,x ,y) ,z)
+                 (begin
+                   (set! a 66)
+                   (+ a x y z))]
+                [_ 'incorrect-else])))
+   78)
+
+  (test
+   "match16"
+   (interp '(begin
+              (define a 100)
+              (match '(1 2 (3 4) 5)
+                [`(1 2 (,x ,y) ,z)
+                 (begin
+                   (set! a 66)
+                   (+ a x y z))]
+                [_ 'incorrect-else])
+              (+ 1 a)))
+   67)
+
+  (test
+   "match17"
+   (interp '(match '(1 2 3)
+              [`(1 2 ,@x) x]))
+   '(3))
+
+  )
+(add-test-cases! test-interp-match)
+
 ;; api
 
 (test-all)

@@ -45,3 +45,4 @@
 
 (provide interp-cps)
 (provide interp)
+(provide self-valued?)

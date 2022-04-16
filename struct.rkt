@@ -35,3 +35,7 @@
 (struct not-matched ())
 (provide not-matched)
 (provide not-matched?)
+
+(struct not-bind ())
+(provide not-bind)
+(provide not-bind?)
