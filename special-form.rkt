@@ -13,6 +13,7 @@
 (require "exp/cond.rkt")
 (require "exp/reset-shift.rkt")
 (require "exp/quote.rkt")
+(require "exp/quasiquote.rkt")
 
 (define (special-form? exp)
   (assq/key-in
@@ -43,6 +44,7 @@
     (reset . ,interp-cps/reset)
     (shift . ,interp-cps/shift)
     (quote . ,interp-cps/quote)
+    ,(cons 'quasiquote interp-cps/quasiquote)
     ))
 
 (provide special-form?)

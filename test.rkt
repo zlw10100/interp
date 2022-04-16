@@ -507,6 +507,7 @@
 
 
 ; quote
+; '
 
 (define (test-interp-quote)
   (test
@@ -530,6 +531,130 @@
 
   )
 (add-test-cases! test-interp-quote)
+
+
+; quasiquote
+; `
+
+(define (test-interp-quasiquote)
+  (test
+   "quasiquote1"
+   (interp '`c)
+   'c)
+
+  (test
+   "quasiquote2"
+   (interp '(if (= 1 1)
+                `hello
+                `world))
+   'hello)
+
+  (test
+   "quasiquote3"
+   (interp '((lambda (x)
+               `(1 2 3 4))
+             100))
+   '(1 2 3 4))
+
+  (test
+   "quasiquote4"
+   (interp '((lambda (x)
+               `(1 2 3 x))
+             100))
+   '(1 2 3 x))
+
+  (test
+   "quasiquote5"
+   (interp '((lambda (x)
+               `(1 2 3 ,x))
+             100))
+   '(1 2 3 100))
+
+  (test
+   "quasiquote6"
+   (interp '((lambda (x)
+               `(1 ,x 3 ,x))
+             100))
+   '(1 100 3 100))
+
+  (test
+   "quasiquote7"
+   (interp '((lambda (x)
+               `(1 ,(+ x 1) 3 ,x))
+             100))
+   '(1 101 3 100))
+
+  (test
+   "quasiquote8"
+   (interp '((lambda (x)
+               `(1 ,((lambda (y)
+                       (+ y 1)) x) 3 ,x))
+             100))
+   '(1 101 3 100))
+
+  (test
+   "quasiquote9"
+   (interp '`())
+   '())
+
+  (test
+   "quasiquote10"
+   (interp '(let ([x 100])
+              `(x ,x)))
+   '(x 100))
+
+  (test
+   "quasiquote11"
+   (interp '(let ([x 100])
+              `(x ,(begin
+                     (set! x 66)
+                     x) ,x)))
+   '(x 66 66))
+
+  (test
+   "quasiquote12"
+   (interp '(let ([x 200])
+              `(out ,(let ([x 100])
+                       `(x ,(begin
+                              (set! x 66)
+                              x) ,x)) ,x)))
+   '(out (x 66 66) 200))
+
+  (test
+   "quasiquote13"
+   (interp '(let ([x '(1 2 3)])
+              `(out ,x)))
+   '(out (1 2 3)))
+  
+  (test
+   "quasiquote14"
+   (interp '(let ([x '(1 2 3)])
+              `(out ,@x)))
+   '(out 1 2 3))
+
+  (test
+   "quasiquote15"
+   (interp '(let ([x '(1 2 3)]
+                  [y '(a b c)])
+              `(out (5 6) ,@x ,y)))
+   '(out (5 6) 1 2 3 (a b c)))
+
+  (test
+   "quasiquote16"
+   (interp '(let ([x '(1 2 3)]
+                  [y '(a b c)])
+              `(out (5 6) (7 ,y ,@x))))
+   '(out (5 6) (7 (a b c) 1 2 3)))
+
+  (test
+   "quasiquote17"
+   (interp '(let ([x 3])
+              `(1 2 ,@x)))
+   '(1 2 . 3))
+  
+  )
+(add-test-cases! test-interp-quasiquote)
+
 
 ;; api
 
