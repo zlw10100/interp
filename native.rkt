@@ -14,8 +14,17 @@
      (<= . ,(native <=))
      (>= . ,(native >=))
      (= . ,(native =))
+     
      (println . ,(native println))
      (printf . ,(native printf))
+     
+     (cons . ,(native cons))
+     (car . ,(native car))
+     (cdr . ,(native cdr))
+     (list . ,(native list))
+     (append . ,(native append))
+     (string-append . ,(native string-append))
+     (last . ,(native last))
      )))
 
 (provide make-native-env)

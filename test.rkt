@@ -805,4 +805,58 @@
 
 ;; api
 
+
+; native
+
+(define (test-interp-native)
+  (test
+   "native-cons"
+   (interp '(cons 1 2))
+   '(1 . 2))
+
+  (test
+   "native-cons1"
+   (interp '(cons 1 '()))
+   '(1))
+
+  (test
+   "native-car"
+   (interp '(car (cons 1 2)))
+   1)
+  
+  (test
+   "native-cdr"
+   (interp '(cdr (cons 1 2)))
+   2)
+
+  (test
+   "native-list"
+   (interp '(list 1 2 3 4 5))
+   '(1 2 3 4 5))
+
+  (test
+   "native-last"
+   (interp '(last (list 1 2 3 4 5)))
+   5)
+
+  (test
+   "native-append"
+   (interp '(append
+             '(1 2 3)
+             '(4 5)
+             '(6)))
+   '(1 2 3 4 5 6))
+
+  (test
+   "native-string-append"
+   (interp '(string-append
+             "hello"
+             " world"
+             "!"))
+   "hello world!")
+  
+  )
+(add-test-cases! test-interp-native)
+
+
 (test-all)
