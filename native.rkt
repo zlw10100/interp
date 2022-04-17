@@ -14,6 +14,7 @@
      (<= . ,(native <=))
      (>= . ,(native >=))
      (= . ,(native =))
+     (eq? . ,(native eq?))
      
      (println . ,(native println))
      (printf . ,(native printf))
