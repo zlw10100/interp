@@ -20,6 +20,8 @@
   (make keys values (make-hash)))
     
 ;; env(mutable)
+(define (make-empty-env)
+  (list (make-hash)))
 
 (define (make-env keys values)
   (list (make-hash/kv keys values)))
@@ -53,6 +55,7 @@
           (insert-hash-table! key value (car env)))))
 
 (provide lookup-not-found?)
+(provide make-empty-env)
 (provide make-env)
 (provide make-env/items)
 (provide extend-env)
