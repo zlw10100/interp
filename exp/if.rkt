@@ -18,14 +18,16 @@
    (if-pred-exp exp)
    env
    (lambda (pred-value)
-     (if pred-value
-         (interp-cps
-          (if-true-exp exp)
-          env
-          k)
-         (interp-cps
-          (if-false-exp exp)
-          env
-          k)))))
+     (if (boolean? pred-value)
+         (if pred-value
+             (interp-cps
+              (if-true-exp exp)
+              env
+              k)
+             (interp-cps
+              (if-false-exp exp)
+              env
+              k))
+         (error "pred value must be boolean: " pred-value)))))
 
 (provide interp-cps/if)

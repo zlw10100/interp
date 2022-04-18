@@ -47,6 +47,8 @@
    (lambda (tc) (tc))
    all-test-cases))
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; test cases
 
 ; test lambda
@@ -96,6 +98,12 @@
                     (lambda (a b) (* a b))
                     (lambda (a b) (+ a b)))) 100 100) 5 5))
    25)
+
+  (test-exn-string
+   "if5"
+   '(if 100 'yes 'no)
+   "pred value must be boolean:  100\n")
+  
   )
 (add-test-cases! test-interp-if)
 
