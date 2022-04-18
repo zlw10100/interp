@@ -20,9 +20,15 @@
      (printf . ,(native printf))
      
      (cons . ,(native cons))
+     (cons? . ,(native cons?))
+     (pair? . ,(native pair?))
      (car . ,(native car))
      (cdr . ,(native cdr))
+     (empty? . ,(native empty?))
+     
      (list . ,(native list))
+     (list . ,(native list))
+     (list? . ,(native list?))
      (append . ,(native append))
      (string-append . ,(native string-append))
      (last . ,(native last))
