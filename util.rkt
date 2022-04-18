@@ -36,6 +36,19 @@
 (define (make-begin-exp sequence)
   (append `(begin) sequence))
 
+(define (get-duplicate ls not-duplicated)
+  (define (check ls s)
+    (if (empty? ls)
+        not-duplicated
+        (let ([e (car ls)]
+              [re (cdr ls)])
+          (if (set-member? s e)
+              e
+              (begin
+                (set-add! s e)
+                (check re s))))))
+  (check ls (mutable-set)))
+
 (provide exp-tag)
 (provide map-cps)
 (provide make-lambda-exp)
@@ -44,3 +57,4 @@
 (provide make-if-exp)
 (provide make-cond-exp/items)
 (provide make-begin-exp)
+(provide get-duplicate)

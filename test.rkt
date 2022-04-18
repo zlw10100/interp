@@ -1,13 +1,40 @@
 #lang racket
 
+(require racket/exn)
+
 (require "interp.rkt")
+
+(struct not-raise ())
 
 ;; test
 (define (test title x expected)
   (if (equal? x expected)
       (printf "[OK] test: ~a~n~n" title)
-      (printf "[FAIL] test: ~a expected: ~a got: ~a~n~n" title expected x)))
+      (printf "[FAIL] test: ~a~nexpected: ~a~ngot: ~a~n~n" title expected x)))
 
+(define (test-exn-string title exp expected)
+  (let ([result (get-exn-string exp)])
+    (cond
+      [(not-raise? result)
+       (printf "[FAIL] test: ~a~n" title)
+       (printf "[WARN] expected exception is not raised!~n")
+       ]
+      [(equal? result expected)
+       (printf "[OK] test: ~a~n~n" title)
+       ]
+      [else
+       (printf "[FAIL] test: ~a~nexpected: ~a~ngot: ~a~n~n" title expected result)
+       ])))
+
+(define (get-exn-string exp)
+  (with-handlers
+      ([exn:fail?
+        (lambda (exn)
+          (exn->string exn))])
+    (begin
+      (interp exp)
+      (not-raise))))
+  
 (define all-test-cases '())
 
 (define (add-test-cases! tc)
@@ -123,6 +150,66 @@
    46)
   )
 (add-test-cases! test-interp-let*)
+
+
+; test letrec
+
+(define (test-interp-letrec)
+  (test
+   "letrec1"
+   (interp '(letrec ([x 2]
+                     [y (+ x 1)])
+              (+ x y)))
+   5)
+
+  (test
+   "letrec2"
+   (interp '(letrec ([sum (lambda (n)
+                            (if (= n 0)
+                                0
+                                (+ n (sum (- n 1)))))])
+              (sum 10)))
+   55)
+
+  (test
+   "letrec3"
+   (interp '(letrec ([sum<5 (lambda (n)
+                              (cond
+                                [(= n 0) 0]
+                                [(< n 5) (+ n (sum<5 (- n 1)))]
+                                [else (sum>=5 n)]))]
+                     [sum>=5 (lambda (n)
+                               (cond
+                                 [(= n 0) 0]
+                                 [(>= n 5) (+ n (sum>=5 (- n 1)))]
+                                 [else (sum<5 n)]))])
+              (sum>=5 100)))
+   5050)
+
+  (test
+   "letrec4"
+   (interp '(letrec ([sum<5 (lambda (n)
+                              (cond
+                                [(= n 0) 0]
+                                [(< n 5) (+ n (sum<5 (- n 1)))]
+                                [else (sum>=5 n)]))]
+                     [sum>=5 (lambda (n)
+                               (cond
+                                 [(= n 0) 0]
+                                 [(>= n 5) (+ n (sum>=5 (- n 1)))]
+                                 [else (sum<5 n)]))])
+              (sum>=5 100)))
+   5050)
+
+  (test-exn-string
+   "letrec5"
+   '(letrec ([x 2]
+             [x 3])
+      x)
+   "duplicate identifier in:  'x\n")
+  
+  )
+(add-test-cases! test-interp-letrec)
 
 ; test define
 
