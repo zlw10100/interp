@@ -6,10 +6,16 @@
 
 (require "struct.rkt")
 (require "env.rkt")
+(require "util.rkt")
+
+(define (builtin/not x)
+  (check-boolean x)
+  (not x))
 
 (define (make-builtin-env)
   (make-env/items
    `(
+     (not . ,(builtin builtin/not))
      
      )))
 

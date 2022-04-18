@@ -47,7 +47,7 @@
                      arg-values))]
           
           [(builtin? op-value)
-           (printf "builtin: ~a~n" (builtin-procedure op-value))
+          ; (printf "builtin: ~a~n" (builtin-procedure op-value))
            (k (apply
                (builtin-procedure op-value)
                arg-values))]

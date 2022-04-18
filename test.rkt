@@ -102,10 +102,91 @@
   (test-exn-string
    "if5"
    '(if 100 'yes 'no)
-   "pred value must be boolean:  100\n")
+   "require boolean, but got:  100\n")
   
   )
 (add-test-cases! test-interp-if)
+
+
+; test and/or/not
+
+(define (test-interp-and-or-not)
+  (test
+   "and-or-not1"
+   (interp '(and))
+   #t)
+
+  (test
+   "and-or-not2"
+   (interp '(or))
+   #f)
+
+  (test
+   "and-or-not3"
+   (interp '(and #t))
+   #t)
+
+  (test
+   "and-or-not4"
+   (interp '(and #f))
+   #f)
+  
+  (test
+   "and-or-not5"
+   (interp '(or #t))
+   #t)
+
+  (test
+   "and-or-not6"
+   (interp '(or #f))
+   #f)
+
+  (test
+   "and-or-not7"
+   (interp '(and
+             (= 1 1)
+             (= 2 3)
+             (println "this exp can not be evaluated")
+             ))
+   #f)
+
+  (test
+   "and-or-not8"
+   (interp '(or
+             (= 1 1)
+             (= 2 3)
+             (println "this exp can not be evaluated")
+             ))
+   #t)
+
+  (test
+   "and-or-not9"
+   (interp '(not (= 1 1)))
+   #f)
+
+  (test
+   "and-or-not10"
+   (interp '(not (= 1 2)))
+   #t)
+
+  (test-exn-string
+   "and-or-not11"
+   '(and 1)
+   "require boolean, but got:  1\n")
+
+  (test-exn-string
+   "and-or-not12"
+   '(or 1)
+   "require boolean, but got:  1\n")
+
+  (test-exn-string
+   "and-or-not13"
+   '(not 1)
+   "require boolean, but got:  1\n")
+  
+  )
+(add-test-cases! test-interp-and-or-not)
+  
 
 ; test let
 

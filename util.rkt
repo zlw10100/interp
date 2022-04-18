@@ -49,6 +49,12 @@
                 (check re s))))))
   (check ls (mutable-set)))
 
+
+(define (check-boolean v)
+  (if (boolean? v)
+      (void)
+      (error "require boolean, but got: " v)))
+
 (provide exp-tag)
 (provide map-cps)
 (provide make-lambda-exp)
@@ -58,3 +64,4 @@
 (provide make-cond-exp/items)
 (provide make-begin-exp)
 (provide get-duplicate)
+(provide check-boolean)

@@ -16,6 +16,7 @@
 (require "exp/quote.rkt")
 (require "exp/quasiquote.rkt")
 (require "exp/match.rkt")
+(require "exp/and-or.rkt")
 
 (define (special-form? exp)
   (assq/key-in
@@ -49,6 +50,8 @@
     (quote . ,interp-cps/quote)
     ,(cons 'quasiquote interp-cps/quasiquote)
     (match . ,interp-cps/match)
+    (and . ,interp-cps/and)
+    (or . ,interp-cps/or)
     ))
 
 (provide special-form?)
