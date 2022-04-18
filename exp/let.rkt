@@ -21,7 +21,15 @@
          [sugar-call-exp (make-call-exp
                       sugar-lambda-exp
                       let-value-exps)])
+    (check-duplicate-name let-keys)
     ;(printf "sugar-call-exp: ~a~n" sugar-call-exp)
     (interp-cps sugar-call-exp env k)))
+
+(define (check-duplicate-name names)
+  (let* ([not-duplicated (lambda (x) x)]  ; not-duplicated可以是任何临时内存对象
+         [result (get-duplicate names not-duplicated)])
+    (if (eq? result not-duplicated)
+        (void)
+        (error "duplicate identifier in: " result))))
 
 (provide interp-cps/let)

@@ -17,7 +17,7 @@
     (cond
       [(not-raise? result)
        (printf "[FAIL] test: ~a~n" title)
-       (printf "[WARN] expected exception is not raised!~n")
+       (printf "[WARN] expected exception is not raised!~n~n")
        ]
       [(equal? result expected)
        (printf "[OK] test: ~a~n~n" title)
@@ -117,6 +117,21 @@
                 100
                 (+ x y))))
    5)
+
+  (test
+   "let3"
+   (interp '(let ([x 2])
+              (let ([x 3])
+                x)))
+   3)
+
+  (test-exn-string
+   "let4"
+   '(let ([x 2]
+          [x 3])
+      x)
+   "duplicate identifier in:  'x\n")
+  
   )
 (add-test-cases! test-interp-let)
 
@@ -148,6 +163,13 @@
               300
               (+ a b)))
    46)
+
+  (test
+   "let*4"
+   (interp '(let* ([x 1]
+                   [x x])
+              x))
+   1)
   )
 (add-test-cases! test-interp-let*)
 
