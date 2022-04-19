@@ -1057,4 +1057,95 @@
 (add-test-cases! test-interp-native)
 
 
+; for
+
+(define (test-interp-for)
+  (test
+   "for1"
+   (interp '(let ([n 0])
+              (for ([x '(1 2 3 4 5)])
+                (set! n (+ n x)))
+              n))
+   15)
+
+  (test
+   "for2"
+   (interp '(let ([n 0]
+                  [x 3]
+                  [y '(4 5)])
+              (for ([x `(,(+ 0 1) 2 ,x ,@y)])
+                (set! n (+ n x)))
+              n))
+   15)
+
+  (test
+   "for3"
+   (interp '(let ([n 0])
+              (for ([x '(1 2 3 4 5)]
+                    [y '(11 12 13 14 15)])
+                (set! n (+ n x y)))
+              n))
+   80)
+
+  (test
+   "for4"
+   (interp '(let ([n 0])
+              (for ([x '(1 2 3 4 5 "error")]
+                    [y '(11 12 13 14 15)])
+                (set! n (+ n x y)))
+              n))
+   80)
+
+  (test
+   "for5"
+   (interp '(let ([n 0])
+              (for ([x '(1 2 3 4 5)]
+                    [y '(11 12 13 14 15 "error")])
+                (set! n (+ n x y)))
+              n))
+   80)
+
+  (test
+   "for6"
+   (interp '(let ([ls '()])
+              (for ([x '(1 2)])
+                (for ([y '(a b)])
+                  (set! ls
+                        (append ls (list (cons x y))))))
+              ls))
+   '((1 . a)
+     (1 . b)
+     (2 . a)
+     (2 . b)))
+
+  (test
+   "for7"
+   (interp '(for ([i '()])
+              "fail"))
+   (void))
+
+  (test
+   "for8"
+   (interp '(for/list ([i '(1 2 3 4 5)])
+              i))
+   '(1 2 3 4 5))
+
+  (test
+   "for9"
+   (interp '(for/list ([x '(1 2)]
+                       [y '(a b)])
+              (cons x y)))
+   '((1 . a)
+     (2 . b)))
+  
+  (test
+   "for10"
+   (interp '(for/list ([x '(1 2)])
+              (for/list ( [y '(a b)])
+                (cons x y))))
+   '(((1 . a) (1 . b)) ((2 . a) (2 . b))))
+  
+  )
+(add-test-cases! test-interp-for)
+
 (test-all)
