@@ -54,7 +54,9 @@
     (and . ,interp-cps/and)
     (or . ,interp-cps/or)
     (for . ,interp-cps/for)
-    (for/list . ,interp-cps/forlist)
+    (for/list . ,interp-cps/for/list)
+    (for* . ,interp-cps/for*)
+    (for*/list . ,interp-cps/for*/list)
     ))
 
 (provide special-form?)

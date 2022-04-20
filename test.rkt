@@ -1141,9 +1141,75 @@
   (test
    "for10"
    (interp '(for/list ([x '(1 2)])
-              (for/list ( [y '(a b)])
+              (for/list ([y '(a b)])
                 (cons x y))))
    '(((1 . a) (1 . b)) ((2 . a) (2 . b))))
+
+  (test
+   "for11"
+   (interp '(let ([ls '()])
+              (for ()
+                (set! ls 'yes))
+              ls))
+   'yes)
+
+  (test
+   "for12"
+   (interp '(for/list ()
+              100))
+   '(100))
+
+  (test
+   "for13"
+   (interp '(let ([ls '()])
+              (for* ([x '(1 2)]
+                     [y '(a b)])
+                (set! ls
+                      (append ls (list (cons x y)))))
+              ls))
+   '((1 . a)
+     (1 . b)
+     (2 . a)
+     (2 . b)))
+    
+  (test
+   "for14"
+   (interp '(for*/list ([x '(1 2)]
+                        [y '(a b)])
+              (cons x y)))
+   '((1 . a) (1 . b) (2 . a) (2 . b)))
+
+  (test
+   "for15"
+   (interp '(for*/list ([x '(1 2)]
+                        [y '(a b c)]
+                        [z '(k)]
+                        [t '(p q h u)])
+              (list x y z t)))
+   '((1 a k p)
+     (1 a k q)
+     (1 a k h)
+     (1 a k u)
+     (1 b k p)
+     (1 b k q)
+     (1 b k h)
+     (1 b k u)
+     (1 c k p)
+     (1 c k q)
+     (1 c k h)
+     (1 c k u)
+     (2 a k p)
+     (2 a k q)
+     (2 a k h)
+     (2 a k u)
+     (2 b k p)
+     (2 b k q)
+     (2 b k h)
+     (2 b k u)
+     (2 c k p)
+     (2 c k q)
+     (2 c k h)
+     (2 c k u)))
   
   )
 (add-test-cases! test-interp-for)
