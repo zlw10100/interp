@@ -30,7 +30,7 @@
   (with-handlers
       ([exn:fail?
         (lambda (exn)
-          (exn->string exn))])
+          (exn-message exn))])
     (begin
       (interp exp)
       (not-raise))))
@@ -102,7 +102,7 @@
   (test-exn-string
    "if5"
    '(if 100 'yes 'no)
-   "require boolean, but got:  100\n")
+   "require boolean, but got:  100")
   
   )
 (add-test-cases! test-interp-if)
@@ -172,17 +172,17 @@
   (test-exn-string
    "and-or-not11"
    '(and 1)
-   "require boolean, but got:  1\n")
+   "require boolean, but got:  1")
 
   (test-exn-string
    "and-or-not12"
    '(or 1)
-   "require boolean, but got:  1\n")
+   "require boolean, but got:  1")
 
   (test-exn-string
    "and-or-not13"
    '(not 1)
-   "require boolean, but got:  1\n")
+   "require boolean, but got:  1")
   
   )
 (add-test-cases! test-interp-and-or-not)
@@ -219,7 +219,7 @@
    '(let ([x 2]
           [x 3])
       x)
-   "duplicate identifier in:  'x\n")
+   "duplicate identifier in:  'x")
   
   )
 (add-test-cases! test-interp-let)
@@ -317,7 +317,7 @@
    '(letrec ([x 2]
              [x 3])
       x)
-   "duplicate identifier in:  'x\n")
+   "duplicate identifier in:  'x")
   
   )
 (add-test-cases! test-interp-letrec)
