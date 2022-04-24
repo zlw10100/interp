@@ -8,7 +8,8 @@
  (struct-out continuation)
  (struct-out pcontinuation)
  (struct-out not-matched)
- (struct-out not-bind )
+ (struct-out not-bind)
+ (struct-out namespace)
  )
 
 (struct lookup-not-found ())
@@ -19,3 +20,4 @@
 (struct pcontinuation (procedure))
 (struct not-matched ())
 (struct not-bind ())
+(struct namespace (env))

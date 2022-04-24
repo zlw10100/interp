@@ -3,6 +3,8 @@
 (require racket/exn)
 
 (require "interp.rkt")
+(require "struct.rkt")
+(require "env.rkt")
 
 (struct not-raise ())
 
@@ -1213,5 +1215,103 @@
   
   )
 (add-test-cases! test-interp-for)
+
+
+; eval-namespace
+
+(define (test-interp-eval-namespace)
+  (test
+   "eval-namespace1"
+   (namespace-env
+    (interp '(make-base-empty-namespace)))
+   (make-empty-env))
+
+  (test
+   "eval-namespace2"
+   (interp '(eval 3))
+   3)
+
+  (test
+   "eval-namespace3"
+   (interp '(eval "hello"))
+   "hello")
+
+  (test
+   "eval-namespace4"
+   (interp '(eval #t))
+   #t)
+
+  (test-exn-string
+   "eval-namespace5"
+   '(eval '+)
+   "not found variable: '+")
+
+  (test-exn-string
+   "eval-namespace6"
+   '(let ([ns (make-base-empty-namespace)])
+      (eval '(+ 1 1) ns))
+   "not found variable: '+")
+
+  (test
+   "eval-namespace7"
+   (interp '(let ([ns (make-base-namespace)])
+              (eval '(+ 1 1) ns)))
+   2)
+
+  (test-exn-string
+   "eval-namespace8"
+   '(let ([out-define 100]
+          [ns (make-base-namespace)])
+      (eval 'out-define ns))
+   "not found variable: 'out-define")
+
+  (test
+   "eval-namespace9"
+   (interp '(let ([out-define 100]
+                  [ns (make-base-namespace)])
+              (eval '(begin
+                       (define out-define 66)
+                       out-define)
+                    ns)
+              out-define))
+   100)
+
+  (test
+   "eval-namespace10"
+   (interp '(let ([out-define 100]
+                  [ns (make-base-namespace)])
+              (eval '(begin
+                       (define out-define 66)
+                       out-define)
+                    ns)
+              (eval '(begin
+                       (set! out-define (+ out-define 1))
+                       out-define)
+                    ns)
+              (+ (eval 'out-define ns)
+                 out-define)))
+              
+   167)
+
+  (test
+   "eval-namespace11"
+   (interp '(let ([ns1 (make-base-namespace)]
+                  [ns2 (make-base-namespace)])
+              (eval '(begin
+                       (define x 1)
+                       x)
+                    ns1)
+              (eval '(begin
+                       (define y 2)
+                       y)
+                    ns2)
+              (+ (eval 'x ns1)
+                 (eval 'y ns2))))
+              
+   3)
+
+  )
+(add-test-cases! test-interp-eval-namespace)
+
 
 (test-all)
