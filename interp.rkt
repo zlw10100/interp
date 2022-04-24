@@ -30,10 +30,13 @@
 
 ;; api
 
+(define (make-init-env)
+  (extend-env
+   (make-builtin-env)
+   (make-native-env)))
+
 (define (interp exp)
-  (let ([init-env (extend-env
-                   (make-builtin-env)
-                   (make-native-env))]
+  (let ([init-env (make-init-env)]
         [final-exp  
          `(begin
             (define Y ,Y-exp)  ;; 这里做了Y combinator的客户代码
@@ -46,3 +49,4 @@
 (provide interp-cps)
 (provide interp)
 (provide self-valued?)
+(provide make-init-env)
